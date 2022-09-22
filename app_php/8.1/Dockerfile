@@ -86,7 +86,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg && \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install nodejs -y
 RUN npm install --global yarn
-RUN mkdir -p /.cache && mkdir -p /.yarn && chown -R 1000:1000 /.cache && chown -R 1000:1000 /.yarn
+RUN mkdir -p /.cache && mkdir -p /.yarn && chown -R 1000:1000 /.cache && chown -R 1000:1000 /.yarn && chown -R 1000:1000 /usr/bin/yarn && touch /.yarnrc && chown -R 1000:1000 /.yarnrc
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
