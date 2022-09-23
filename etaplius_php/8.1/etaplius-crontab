@@ -1,0 +1,5 @@
+# must be ended with a new line "LF" (Unix) and not "CRLF" (Windows)
+*/5 * * * * /usr/local/bin/php /var/www/etaplius/bin/console app:check-vip >> /var/log/cron.log 2>&1
+* * * * * /usr/local/bin/php /var/www/etaplius/bin/console app:publish-articles >> /var/log/cron.log 2>&1
+0 0 * * * /usr/local/bin/php /var/www/etaplius/bin/console app:delete-old-view-ip-logs >> /var/log/cron.log 2>&1
+# An empty line is required at the end of this file for a valid cron file.
