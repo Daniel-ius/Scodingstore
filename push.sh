@@ -23,8 +23,17 @@ docker push $REGISTRY_URL/app_php:8.1
 docker build -t $REGISTRY_URL/app_php_xdebug:8.1 app_php_xdebug/8.1/.
 docker push $REGISTRY_URL/app_php_xdebug:8.1
 
-docker build -t $REGISTRY_URL/app_rabbitmq:latest app_rabbitmq/latest/.
+docker build -t $REGISTRY_URL/app_rabbitmq:latest app_„rabbitmq/latest/.
 docker push $REGISTRY_URL/app_rabbitmq:latest
 
 docker build -t $REGISTRY_URL/app_redis:latest app_redis/latest/.
 docker push $REGISTRY_URL/app_redis:latest
+
+docker build -t $REGISTRY_URL/etaplius_elasticsearch:8.4.1 etaplius_elasticsearch/8.4.1/.
+docker push $REGISTRY_URL/etaplius_elasticsearch:8.4.1
+
+docker build -t $REGISTRY_URL/etaplius_kibana:8.4.1 etaplius_kibana/8.4.1/.
+docker push $REGISTRY_URL/etaplius_kibana:8.4.1
+
+docker build -t $REGISTRY_URL/etaplius_php:8.1 etaplius_php/8.1/.
+docker push $REGISTRY_URL/etaplius_php:8.1
