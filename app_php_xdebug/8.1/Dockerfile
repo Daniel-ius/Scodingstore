@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/internal7/symfony_app/app_php:8.1
+FROM registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php:8.1
 
 # Set working directory
 WORKDIR /var/www/html
