@@ -1,6 +1,7 @@
 #!/bin/bash
 
-REGISTRY_URL='registry.gitlab.com/sc-rep/scoding/internal7/docker-images'
+#REGISTRY_URL='registry.gitlab.com/sc-rep/scoding/internal7/docker-images'
+REGISTRY_URL='scodocker'
 
 docker build -t $REGISTRY_URL/app_elasticsearch:8.0 app/elasticsearch/8.0/.
 docker push $REGISTRY_URL/app_elasticsearch:8.0
