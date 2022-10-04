@@ -38,3 +38,6 @@ docker push $REGISTRY_URL/etaplius_kibana:8.4.1
 
 docker build -t $REGISTRY_URL/etaplius_php:8.1 etaplius/php/8.1/.
 docker push $REGISTRY_URL/etaplius_php:8.1
+
+docker build -t $REGISTRY_URL/etaplius_rabbitmq:latest etaplius/rabbitmq/latest/.
+docker push $REGISTRY_URL/etaplius_rabbitmq:latest
