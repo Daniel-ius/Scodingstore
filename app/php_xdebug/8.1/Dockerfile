@@ -8,6 +8,8 @@ USER root
 RUN pecl install xdebug
 RUN install-php-extensions xdebug
 
+RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
