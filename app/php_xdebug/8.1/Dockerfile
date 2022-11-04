@@ -6,7 +6,6 @@ WORKDIR /var/www/html
 USER root
 ## xDebug
 RUN pecl install xdebug
-RUN install-php-extensions xdebug
 
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
