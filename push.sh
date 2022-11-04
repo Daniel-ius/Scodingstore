@@ -44,3 +44,6 @@ docker push $REGISTRY_URL/etaplius_rabbitmq:latest
 
 docker build -t $REGISTRY_URL/inventory_x_php:8.1 inventory-x/php/8.1/.
 docker push $REGISTRY_URL/inventory_x_php:8.1
+
+docker build -t $REGISTRY_URL/inventory_x_php_xdebug:8.1 inventory-x/php_xdebug/8.1/.
+docker push $REGISTRY_URL/inventory_x_php_xdebug:8.1
