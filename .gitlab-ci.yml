@@ -1,0 +1,11 @@
+stages:
+  - build
+
+variables:
+  APP_ENV: 'test'
+
+docker_build:
+  stage: build
+  image: docker:latest
+  script:
+    - cat /etc/*-release
