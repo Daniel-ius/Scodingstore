@@ -8,7 +8,7 @@ docker_build:
   services:
     - docker:dind
   script:
-    - if ["$${CI_COMMIT_REF_NAME}" == 'master']; then export APP_ENV="prod"; else export APP_ENV="test"; fi
+    - if ["$${CI_COMMIT_REF_NAME}" == "master"]; then export APP_ENV="prod"; else export APP_ENV="test"; fi
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php push.php
