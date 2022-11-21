@@ -4,16 +4,18 @@ stages:
   - validate
   - deploy
 
+variables:
+  APP_ENV: 'test'
+
 docker_image_deploy:
   stage: deploy
   services:
     - docker:dind
   only:
     - master
-  variables:
-    APP_ENV: "prod"
   when: manual
   script:
+    - export APP_ENV="prod"
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php docker.php
@@ -24,9 +26,7 @@ docker_image_validate:
     - docker:dind
   rules:
     - if: $CI_COMMIT_BRANCH != "master"
-  variables:
-    APP_ENV: "test"
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
-    - php docker.php build
+    - php docker.php
