@@ -1,11 +1,12 @@
+image: $GITLAB_REGISTRY/sc-rep/scoding/internal7/docker-images/app_docker_amd64:latest
+
 stages:
   - build
 
-variables:
-  APP_ENV: 'test'
-
 docker_build:
   stage: build
-  image: docker:latest
   script:
-    - cat /etc/*-release
+    - if [$CI_COMMIT_REF_NAME == 'master']; then export APP_ENV="prod"; else export APP_ENV="test"; fi
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+    - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
+    - php push.php

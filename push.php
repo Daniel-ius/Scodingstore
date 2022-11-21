@@ -75,8 +75,6 @@ class DockerImage {
         private string $path,
         private string $imageName,
         private string $platform,
-        private bool $isBuild = false,
-        private bool $isPushed = false,
     ) {
     }
 
@@ -112,32 +110,15 @@ class DockerImage {
         return $this->platform;
     }
 
-    /**
-     * @return bool
-     */
-    public function isBuild(): bool
-    {
-        return $this->isBuild;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPushed(): bool
-    {
-        return $this->isPushed;
-    }
-
     public function create(string $environment = 'prod'): self
     {
-        $this->build();
-        if (!$this->isBuild()) {
+        if (!$this->build()) {
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
 
+        var_dump($environment);
         if ($environment === 'prod') {
-            $this->push();
-            if (!$this->isPushed()) {
+            if (!$this->push()) {
                 throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
             }
         }
@@ -145,17 +126,20 @@ class DockerImage {
         return $this;
     }
 
-    private function build(): void
+    private function build(): bool
     {
-        $returnCode = shell_exec("docker build --platform {$this->platform} -t {$this->registry}/{$this->imageName} {$this->path}/.");
-        $this->isBuild = $returnCode !== false;
+        $returnCode = exec("docker build --platform {$this->platform} -t {$this->registry}/{$this->imageName} {$this->path}/.");
+
+        return $returnCode !== false;
     }
 
-    private function push(): void
+    private function push(): bool
     {
-        $returnCode = shell_exec("docker push {$this->registry}/{$this->imageName}");
-        $this->isPushed = $returnCode !== false;
+        $returnCode = exec("docker push {$this->registry}/{$this->imageName}");
+
+        return $returnCode !== false;
     }
 }
 
-$pushService = new DockerPushService();
+(new DockerPushService())
+    ->push();
