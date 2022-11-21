@@ -12,6 +12,7 @@ docker_image_deploy:
   services:
     - docker:dind
   only:
+    - branches
     - master
   when: manual
   script:
