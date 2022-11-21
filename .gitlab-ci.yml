@@ -1,14 +1,32 @@
 image: $GITLAB_REGISTRY/sc-rep/scoding/internal7/docker-images/app_docker_amd64:latest
 
 stages:
-  - build
+  - validate
+  - deploy
 
-docker_build:
-  stage: build
+docker_image_deploy:
+  stage: deploy
   services:
     - docker:dind
+  only:
+    - master
+  variables:
+    APP_ENV: "prod"
+  when: manual
   script:
-    - if ["$${CI_COMMIT_REF_NAME}" == "master"]; then export APP_ENV="prod"; else export APP_ENV="test"; fi
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
-    - php push.php
+    - php docker.php
+
+docker_image_validate:
+  stage: validate
+  services:
+    - docker:dind
+  rules:
+    - if: $CI_COMMIT_BRANCH != "master"
+  variables:
+    APP_ENV: "test"
+  script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+    - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
+    - php docker.php build
