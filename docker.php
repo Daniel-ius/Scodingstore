@@ -132,7 +132,7 @@ class DockerImage {
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
 
-        if ($onlyBuild) {
+        if (!$onlyBuild) {
             if (!$this->push()) {
                 throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
             }
