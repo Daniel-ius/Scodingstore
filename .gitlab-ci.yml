@@ -23,7 +23,6 @@ docker_image_validate:
   rules:
     - if: $CI_COMMIT_BRANCH != "master"
   script:
-    - export APP_ENV="test"
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
-    - php docker.php
+    - php docker.php --only-build

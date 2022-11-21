@@ -21,6 +21,13 @@ class DockerPushService {
         'linux/arm64',
     ];
 
+    private array $options;
+
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
+
     public function push(): void
     {
         $directories = $this->scanDirectories();
@@ -45,7 +52,7 @@ class DockerPushService {
         $imageName = sprintf('%s_%s:%s', implode('_', $imageNameParts), $platformUname, $tag);
         $image = new DockerImage($registry, $path, $imageName, $platform);
 
-        return $image->create($_ENV['APP_ENV'] ?? 'prod');
+        return $image->create(isset($this->options['only-build']));
     }
 
     /**
@@ -119,14 +126,13 @@ class DockerImage {
         return $this->platform;
     }
 
-    public function create(string $environment = 'prod'): self
+    public function create(bool $onlyBuild = false): self
     {
         if (!$this->build()) {
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
 
-        var_dump($environment);
-        if ($environment === 'prod') {
+        if ($onlyBuild) {
             if (!$this->push()) {
                 throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
             }
@@ -150,5 +156,5 @@ class DockerImage {
     }
 }
 
-(new DockerPushService())
+(new DockerPushService(getopt('o::', ['only-build::'])))
     ->push();
