@@ -1,8 +1,7 @@
-FROM scodocker/app_php:8.1
+FROM docker:latest
 
 WORKDIR /var/www/html
 
 USER root
 
-RUN apt-get update
-RUN apt install docker.io -y
+RUN apk update && apk upgrade && apk add php

@@ -70,12 +70,21 @@ class DockerPushService {
 }
 
 class DockerImage {
+    private string $registry;
+    private string $path;
+    private string $imageName;
+    private string $platform;
+
     public function __construct(
-        private string $registry,
-        private string $path,
-        private string $imageName,
-        private string $platform,
+        string $registry,
+        string $path,
+        string $imageName,
+        string $platform
     ) {
+        $this->registry = $registry;
+        $this->path = $path;
+        $this->imageName = $imageName;
+        $this->platform = $platform;
     }
 
     /**
@@ -116,7 +125,6 @@ class DockerImage {
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
 
-        var_dump($environment);
         if ($environment === 'prod') {
             if (!$this->push()) {
                 throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
@@ -128,16 +136,16 @@ class DockerImage {
 
     private function build(): bool
     {
-        $returnCode = exec("docker build --platform {$this->platform} -t {$this->registry}/{$this->imageName} {$this->path}/.");
+        exec("docker build --platform {$this->platform} -t {$this->registry}/{$this->imageName} {$this->path}/.", $output, $result);
 
-        return $returnCode !== false;
+        return $result === 0;
     }
 
     private function push(): bool
     {
-        $returnCode = exec("docker push {$this->registry}/{$this->imageName}");
+        exec("docker push {$this->registry}/{$this->imageName}", $output, $result);
 
-        return $returnCode !== false;
+        return $result === 0;
     }
 }
 
