@@ -20,8 +20,8 @@ docker_image_validate:
   stage: validate
   services:
     - docker:dind
-  rules:
-    - if: $CI_COMMIT_BRANCH != "master"
+  only:
+    - branches
   script:
     - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
