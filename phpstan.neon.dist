@@ -1,22 +1,10 @@
 includes:
     - 'phpstan-baseline.neon'
-    - 'vendor/phpstan/phpstan-doctrine/extension.neon'
-    - 'vendor/phpstan/phpstan-doctrine/rules.neon'
-    - 'vendor/phpstan/phpstan-phpunit/extension.neon'
-    - 'vendor/phpstan/phpstan-phpunit/rules.neon'
-    - 'vendor/phpstan/phpstan-symfony/extension.neon'
-    - 'vendor/phpstan/phpstan-symfony/rules.neon'
 
 parameters:
     level: 6
     paths:
-        - config
-        - migrations
-        - public
-        - src
-        - tests
-    bootstrapFiles:
-        - tests/phpstanBootstrap.php
+        - docker.php
     parallel:
         processTimeout: 150.0
     tmpDir: .phpstan

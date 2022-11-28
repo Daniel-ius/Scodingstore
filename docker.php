@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-class DockerPushService {
-
+class DockerPushService
+{
     /**
      * @var string[]
      */
@@ -20,7 +20,6 @@ class DockerPushService {
         '..',
         '.git',
         '.idea',
-        '.docker',
     ];
 
     /**
@@ -47,7 +46,7 @@ class DockerPushService {
     public function push(): void
     {
         $directories = $this->scanDirectories();
-        array_filter($directories, function(string $path) {
+        array_filter($directories, function (string $path) {
             $images = [];
             foreach (self::REGISTRIES as $registry) {
                 foreach (self::SUPPORTED_PLATFORMS as $platform) {
@@ -72,27 +71,30 @@ class DockerPushService {
     }
 
     /**
+     * @param string[] $result
+     *
      * @return string[]
      */
     private function scanDirectories(string $path = __DIR__, array &$result = []): array
     {
         foreach (scandir($path) as $dir) {
-            if (!is_dir($path . '/' . $dir) || in_array($dir, self::IGNORE_DIRS)) {
+            if (!is_dir($path.'/'.$dir) || in_array($dir, self::IGNORE_DIRS)) {
                 continue;
             }
 
-            if (file_exists($path . '/' . $dir . '/Dockerfile')) {
-                $result[] = $path . '/' . $dir;
+            if (file_exists($path.'/'.$dir.'/Dockerfile')) {
+                $result[] = $path.'/'.$dir;
             }
 
-            $this->scanDirectories($path . '/' . $dir, $result);
+            $this->scanDirectories($path.'/'.$dir, $result);
         }
 
         return $result;
     }
 }
 
-class DockerImage {
+class DockerImage
+{
     private string $registry;
     private string $path;
     private string $imageName;
@@ -110,33 +112,21 @@ class DockerImage {
         $this->platform = $platform;
     }
 
-    /**
-     * @return string
-     */
     public function getRegistry(): string
     {
         return $this->registry;
     }
 
-    /**
-     * @return string
-     */
     public function getPath(): string
     {
         return $this->path;
     }
 
-    /**
-     * @return string
-     */
     public function getImageName(): string
     {
         return $this->imageName;
     }
 
-    /**
-     * @return string
-     */
     public function getPlatform(): string
     {
         return $this->platform;

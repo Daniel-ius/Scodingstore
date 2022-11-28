@@ -17,12 +17,8 @@ use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude([
-        'node_modules',
-        'var',
-        'config',
-        'public',
+        'vendor',
     ])
-    ->notPath('src/Kernel.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 
