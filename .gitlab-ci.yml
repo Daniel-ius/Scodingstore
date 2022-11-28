@@ -58,7 +58,7 @@ phpcs:
     - docker
   script:
     - 'vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard'
-    - 'vendor/bin/phpcs --report=junit --report-junit=phpcs-report.xml *.php'
+    - 'vendor/bin/phpcs --standard=vendor/scoding/cs-ruleset/ --report=junit --report-junit=phpcs-report.xml *.php'
   artifacts:
     expire_in: 1 hour
     reports:

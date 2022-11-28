@@ -24,11 +24,18 @@
         "friendsofphp/php-cs-fixer": "^3.11",
         "squizlabs/php_codesniffer": "*",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
-        "escapestudios/symfony2-coding-standard": "^2.1"
+        "escapestudios/symfony2-coding-standard": "^2.1",
+        "scoding/cs-ruleset": "^1.0.1"
     },
     "scripts": {
         "post-install-cmd": [
             "vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard"
         ]
+    },
+    "repositories": {
+        "scoding-cs-ruleset": {
+            "type": "vcs",
+            "url": "https://gitlab.com/scoding-internal/scoding-cs-rules.git"
+        }
     }
 }

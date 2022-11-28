@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff9936ce238fd6196887f81a31e22f11",
+    "content-hash": "0e20c45270449db7b6444fcf17fc5353",
     "packages": [],
     "packages-dev": [
         {
@@ -1932,6 +1932,34 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "scoding/cs-ruleset",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/scoding-internal/scoding-cs-rules.git",
+                "reference": "33e350cd2677cb7016f4b15ce8014c92c5458a8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/scoding-internal%2Fscoding-cs-rules/repository/archive.zip?sha=33e350cd2677cb7016f4b15ce8014c92c5458a8a",
+                "reference": "33e350cd2677cb7016f4b15ce8014c92c5458a8a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "escapestudios/symfony2-coding-standard": "^3.13",
+                "squizlabs/php_codesniffer": "^3.7"
+            },
+            "type": "library",
+            "description": "Scoding internal ruleset for Code Sniffer.",
+            "support": {
+                "source": "https://gitlab.com/scoding-internal/scoding-cs-rules/-/tree/1.0.1"
+            },
+            "time": "2022-11-28T13:27:17+02:00"
         },
         {
             "name": "sebastian/diff",
