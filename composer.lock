@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c88cd1eca58f07e92e2cbc45a08f8c48",
+    "content-hash": "ff9936ce238fd6196887f81a31e22f11",
     "packages": [],
     "packages-dev": [
         {
@@ -1051,6 +1051,57 @@
                 }
             ],
             "time": "2022-11-27T16:20:11+00:00"
+        },
+        {
+            "name": "escapestudios/symfony2-coding-standard",
+            "version": "2.3.0",
+            "target-dir": "escapestudios/Symfony2-coding-standard",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/djoos/Symfony-coding-standard.git",
+                "reference": "6f37c8dbb1264d7e964a4ad7d2b6fc9deeb01f60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/djoos/Symfony-coding-standard/zipball/6f37c8dbb1264d7e964a4ad7d2b6fc9deeb01f60",
+                "reference": "6f37c8dbb1264d7e964a4ad7d2b6fc9deeb01f60",
+                "shasum": ""
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "coding-standard",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Joos",
+                    "email": "david.joos@escapestudios.com"
+                },
+                {
+                    "name": "Community contributors",
+                    "homepage": "https://github.com/escapestudios/Symfony2-coding-standard/graphs/contributors"
+                }
+            ],
+            "description": "CodeSniffer ruleset for the Symfony2 coding standard",
+            "homepage": "https://github.com/escapestudios/Symfony2-coding-standard",
+            "keywords": [
+                "Coding Standard",
+                "Symfony2",
+                "phpcs"
+            ],
+            "support": {
+                "issues": "https://github.com/escapestudios/Symfony2-coding-standard/issues",
+                "source": "https://github.com/escapestudios/Symfony2-coding-standard"
+            },
+            "time": "2015-04-11T00:16:34+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
