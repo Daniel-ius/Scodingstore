@@ -60,7 +60,7 @@ class DockerPushService
 
     private function dockerCreateImage(string $registry, string $path, string $platform): DockerImage
     {
-        $imageNameParts = explode('/', str_replace(__DIR__ . '/', '', $path));
+        $imageNameParts = explode('/', str_replace(__DIR__.'/', '', $path));
         $tag = array_pop($imageNameParts);
         $platformParts = explode('/', $platform);
         $platformUname = end($platformParts);
@@ -78,15 +78,15 @@ class DockerPushService
     private function scanDirectories(string $path = __DIR__, array &$result = []): array
     {
         foreach (scandir($path) as $dir) {
-            if (!is_dir($path . '/' . $dir) || in_array($dir, self::IGNORE_DIRS)) {
+            if (!is_dir($path.'/'.$dir) || in_array($dir, self::IGNORE_DIRS)) {
                 continue;
             }
 
-            if (file_exists($path . '/' . $dir . '/Dockerfile')) {
-                $result[] = $path . '/' . $dir;
+            if (file_exists($path.'/'.$dir.'/Dockerfile')) {
+                $result[] = $path.'/'.$dir;
             }
 
-            $this->scanDirectories($path . '/' . $dir, $result);
+            $this->scanDirectories($path.'/'.$dir, $result);
         }
 
         return $result;
@@ -95,10 +95,10 @@ class DockerPushService
 
 class DockerImage
 {
-    private string $registry;
-    private string $path;
-    private string $imageName;
     private string $platform;
+    private string $imageName;
+    private string $path;
+    private string $registry;
 
     public function __construct(
         string $registry,
