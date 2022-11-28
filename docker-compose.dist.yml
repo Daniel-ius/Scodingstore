@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  image_php:
+    image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_xdebug:8.1
+    container_name: image_php
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    environment:
+      PHP_IDE_CONFIG: "serverName=symfony-local"
+    ports:
+      - "9005:9000"
+    volumes:
+      - ./:/var/www/html:cached
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini:delegated
+      - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf:delegated
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:delegated
+    extra_hosts:
+      - "docker.for.mac.localhost:host-gateway"
+    #     - "host.docker.internal:host-gateway" - for unix
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local

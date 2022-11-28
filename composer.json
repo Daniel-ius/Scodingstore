@@ -1,0 +1,25 @@
+{
+    "name": "scoding/docker-images",
+    "description": "Scoding internal .docker images for docker",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Elvinas",
+            "email": "elvinas.stanionis@scoding.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "phpro/grumphp": true
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.8",
+        "phpro/grumphp": "^1.13",
+        "friendsofphp/php-cs-fixer": "^3.11",
+        "squizlabs/php_codesniffer": "*",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.11"
+    }
+}

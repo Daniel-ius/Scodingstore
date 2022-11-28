@@ -1,8 +1,30 @@
 image: $GITLAB_REGISTRY/sc-rep/scoding/internal7/docker-images/app_docker_amd64:latest
 
 stages:
+  - dependencies
   - validate
   - deploy
+
+variables:
+  COMPOSER_MEMORY_LIMIT: '-1'
+
+install_dependencies:
+  stage: dependencies
+  only: [branches]
+  needs: []
+  cache:
+    key: composer
+    paths:
+      - .composer/
+  tags:
+    - docker
+  script:
+    - 'composer --ansi --no-interaction install --no-progress --classmap-authoritative'
+  artifacts:
+    expire_in: 1 hour
+    when: on_success
+    paths:
+      - vendor/
 
 docker_image_deploy:
   stage: deploy
@@ -16,8 +38,75 @@ docker_image_deploy:
     - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php docker.php
 
+phpcs:
+  stage: validate
+  only: [branches]
+  allow_failure: true
+  needs:
+    - job: install_dependencies
+  cache:
+    key:
+      files:
+        - phpcs.xml.dist
+        - composer.lock
+      prefix: phpcs
+    paths:
+      - .phpcs-cache
+  tags:
+    - docker
+  script:
+    - 'vendor/bin/phpcs --report=junit --report-junit=phpcs-report.xml *.php'
+  artifacts:
+    expire_in: 1 hour
+    reports:
+      junit: 'phpcs-report.xml'
+
+php-cs-fixer:
+  stage: validate
+  only: [branches]
+  needs:
+    - job: install_dependencies
+  cache:
+    key:
+      files:
+        - .php-cs-fixer.php
+        - composer.lock
+      prefix: php-cs-fixer
+    paths:
+      - .php-cs-fixer.cache
+  tags:
+    - docker
+  script:
+    - 'vendor/bin/php-cs-fixer fix -v --dry-run --diff --format=junit > phpcsfixer-report.xml'
+  artifacts:
+    expire_in: 1 hour
+    reports:
+      junit: 'phpcsfixer-report.xml'
+
+phpstan:
+  stage: validate
+  only: [branches]
+  needs:
+    - job: install_dependencies
+  cache:
+    key: phpstan
+    paths:
+      - .phpstan
+  tags:
+    - docker
+  variables:
+    APP_DEBUG: '1'
+  script:
+    - 'vendor/bin/phpstan analyse --error-format=junit --no-interaction --no-progress --memory-limit=-1 1> phpstan-report.xml'
+  artifacts:
+    expire_in: 1 hour
+    reports:
+      junit: 'phpstan-report.xml'
+
 docker_image_validate:
   stage: validate
+  needs:
+    - job: install_dependencies
   services:
     - docker:dind
   only:

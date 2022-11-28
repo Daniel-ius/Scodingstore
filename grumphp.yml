@@ -1,0 +1,22 @@
+grumphp:
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: docker exec image_php php
+  ascii:
+    failed: ~
+    succeeded: ~
+  tasks:
+    composer: ~
+    git_blacklist:
+      regexp_type: P
+      keywords:
+        - "\\b(die|exit)\\("
+        - "\\b(die|exit);"
+        - "(?<!>)dump\\("
+        - "var_dump\\("
+        - "(print_r|var_export)\\((?!\\$\\w+, true\\))"
+      triggered_by: ['php', 'js', 'html', 'twig']
+    phpcsfixer:
+      config: .php-cs-fixer.dist.php
+    phpstan:
+      configuration: phpstan.neon.dist
+      memory_limit: '-1'

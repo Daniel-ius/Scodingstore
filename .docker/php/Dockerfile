@@ -1,5 +1,6 @@
-FROM php:8.1.12-fpm
+FROM php:8.1.5-fpm
 
+# Set working directory
 WORKDIR /var/www/html
 
 ARG APCU_VERSION=5.1.21
@@ -42,7 +43,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
-RUN docker-php-ext-install opcache
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
@@ -55,18 +55,21 @@ RUN pecl install \
 		apcu \
 		opcache \
 	;
-
+## xDebug
+RUN pecl install xdebug
+RUN install-php-extensions xdebug
+# BCMath
 RUN docker-php-ext-install bcmath
-
+# Symfony requirement
 RUN docker-php-ext-install intl
-
+# SSH
 RUN install-php-extensions ssh2
-
+# Change current user to www
 USER root
 
-COPY local.ini /usr/local/etc/php/conf.d/local.ini
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY ./local.ini /usr/local/etc/php/conf.d/local.ini
+COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN chown -R www-data:www-data ./
 
@@ -79,15 +82,15 @@ RUN apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-webp --with-jpeg && \
     docker-php-ext-install gd
 
-RUN curl -fsSL https://deb.nodesource.com/setup_12.x | bash -
+# Installing node
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install nodejs -y
 RUN npm install --global yarn
 RUN mkdir -p /.cache && mkdir -p /.yarn && chown -R 1000:1000 /.cache && chown -R 1000:1000 /.yarn && chown -R 1000:1000 /usr/bin/yarn && touch /.yarnrc && chown -R 1000:1000 /.yarnrc
 
-RUN useradd -ms /bin/bash 1000
-COPY .ssh /home/1000/.ssh
-
+# Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
 
+#1000 = www-data
 USER 1000
