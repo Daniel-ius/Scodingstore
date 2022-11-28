@@ -10,7 +10,7 @@ variables:
 
 install_dependencies:
   stage: dependencies
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:8.1
+  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
   only: [branches]
   needs: []
   cache:
@@ -41,7 +41,7 @@ docker_image_deploy:
 
 phpcs:
   stage: validate
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:8.1
+  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
   only: [branches]
   allow_failure: true
   needs:
@@ -65,7 +65,7 @@ phpcs:
 
 php-cs-fixer:
   stage: validate
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:8.1
+  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
   only: [branches]
   needs:
     - job: install_dependencies
@@ -88,7 +88,7 @@ php-cs-fixer:
 
 phpstan:
   stage: validate
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:8.1
+  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
   only: [branches]
   needs:
     - job: install_dependencies
