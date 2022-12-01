@@ -1,0 +1,10 @@
+includes:
+    - 'phpstan-baseline.neon'
+
+parameters:
+    level: 6
+    paths:
+        - docker.php
+    parallel:
+        processTimeout: 150.0
+    tmpDir: .phpstan
