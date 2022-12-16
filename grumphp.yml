@@ -15,6 +15,7 @@ grumphp:
         - "var_dump\\("
         - "(print_r|var_export)\\((?!\\$\\w+, true\\))"
       triggered_by: ['php', 'js', 'html', 'twig']
+# Commenting for now, quickfix.
 #    phpcs:
 #      standard: "vendor/scoding/cs-ruleset"
     phpcsfixer:
