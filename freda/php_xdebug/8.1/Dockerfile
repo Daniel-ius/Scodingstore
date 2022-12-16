@@ -1,4 +1,4 @@
-FROM scodocker/freda_php:8.1
+FROM registry.gitlab.com/sc-rep/scoding/internal7/docker-images/freda_php_{{platform}}:8.1
 
 # Set working directory
 WORKDIR /var/www/html

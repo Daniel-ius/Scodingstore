@@ -7,6 +7,14 @@ class DockerPushService
     /**
      * @var string[]
      */
+    public const SUPPORTED_PLATFORMS = [
+        'amd64' => 'linux/amd64',
+        'arm64' => 'linux/arm64',
+    ];
+
+    /**
+     * @var string[]
+     */
     private const REGISTRIES = [
         'registry.gitlab.com/sc-rep/scoding/internal7/docker-images',
         'scodocker',
@@ -20,14 +28,6 @@ class DockerPushService
         '..',
         '.git',
         '.idea',
-    ];
-
-    /**
-     * @var string[]
-     */
-    private const SUPPORTED_PLATFORMS = [
-        'linux/amd64',
-        'linux/arm64',
     ];
 
     /**
@@ -49,8 +49,8 @@ class DockerPushService
         array_filter($directories, function (string $path) {
             $images = [];
             foreach (self::REGISTRIES as $registry) {
-                foreach (self::SUPPORTED_PLATFORMS as $platform) {
-                    $images[] = $this->dockerCreateImage($registry, $path, $platform)->getImageName();
+                foreach (self::SUPPORTED_PLATFORMS as $platformUname => $platform) {
+                    $images[] = $this->dockerCreateImage($registry, $path, $platformUname)->getImageName();
                 }
             }
 
@@ -58,14 +58,12 @@ class DockerPushService
         });
     }
 
-    private function dockerCreateImage(string $registry, string $path, string $platform): DockerImage
+    private function dockerCreateImage(string $registry, string $path, string $platformUname): DockerImage
     {
         $imageNameParts = explode('/', str_replace(__DIR__.'/', '', $path));
         $tag = array_pop($imageNameParts);
-        $platformParts = explode('/', $platform);
-        $platformUname = end($platformParts);
         $imageName = sprintf('%s_%s:%s', implode('_', $imageNameParts), $platformUname, $tag);
-        $image = new DockerImage($registry, $path, $imageName, $platform);
+        $image = new DockerImage($registry, $path, $imageName, $platformUname);
 
         return $image->create(isset($this->options['only-build']));
     }
@@ -95,7 +93,7 @@ class DockerPushService
 
 class DockerImage
 {
-    private string $platform;
+    private string $platformUname;
     private string $imageName;
     private string $path;
     private string $registry;
@@ -109,7 +107,7 @@ class DockerImage
         $this->registry = $registry;
         $this->path = $path;
         $this->imageName = $imageName;
-        $this->platform = $platform;
+        $this->platformUname = $platform;
     }
 
     public function getRegistry(): string
@@ -127,9 +125,9 @@ class DockerImage
         return $this->imageName;
     }
 
-    public function getPlatform(): string
+    public function getPlatformUname(): string
     {
-        return $this->platform;
+        return $this->platformUname;
     }
 
     public function create(bool $onlyBuild = false): self
@@ -149,7 +147,21 @@ class DockerImage
 
     private function build(): bool
     {
-        exec("docker build --platform {$this->platform} -t {$this->registry}/{$this->imageName} {$this->path}/.", $output, $result);
+        $dockerfile = sprintf('%s/Dockerfile', $this->path);
+        if (!file_exists($dockerfile)) {
+            throw new RuntimeException(sprintf('No Dockerfile found at %s path.', $this->path));
+        }
+
+        $content = file_get_contents($dockerfile);
+        $replacedContent = str_replace(['{{platform}}', '{{ platform }}'], [$this->platformUname, $this->platformUname], $content);
+        if (!isset(DockerPushService::SUPPORTED_PLATFORMS[$this->platformUname])) {
+            throw new RuntimeException(sprintf('Unsupported platform for %s uname', $this->platformUname));
+        }
+        $platform = DockerPushService::SUPPORTED_PLATFORMS[$this->platformUname];
+
+        file_put_contents($dockerfile, $replacedContent);
+        exec("docker build --platform {$platform} -t {$this->registry}/{$this->imageName} {$this->path}/.", $output, $result);
+        file_put_contents($dockerfile, $content);
 
         return $result === 0;
     }

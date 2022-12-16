@@ -1,4 +1,4 @@
-FROM scodocker/app_php_xdebug:8.1
+FROM registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_xdebug_{{platform}}:8.1
 
 USER root
 

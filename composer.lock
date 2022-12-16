@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9887194558147272822475bbe30f22e0",
+    "content-hash": "b3d44d23df3f99cf64757b403abefb29",
     "packages": [],
     "packages-dev": [
         {
@@ -1943,16 +1943,16 @@
         },
         {
             "name": "scoding/cs-ruleset",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/scoding-internal/scoding-cs-rules.git",
-                "reference": "33e350cd2677cb7016f4b15ce8014c92c5458a8a"
+                "reference": "bed9065975c38b5833d511fd5a3f5b1519d387ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/scoding-internal%2Fscoding-cs-rules/repository/archive.zip?sha=33e350cd2677cb7016f4b15ce8014c92c5458a8a",
-                "reference": "33e350cd2677cb7016f4b15ce8014c92c5458a8a",
+                "url": "https://gitlab.com/api/v4/projects/scoding-internal%2Fscoding-cs-rules/repository/archive.zip?sha=bed9065975c38b5833d511fd5a3f5b1519d387ce",
+                "reference": "bed9065975c38b5833d511fd5a3f5b1519d387ce",
                 "shasum": ""
             },
             "require": {
@@ -1965,9 +1965,9 @@
             "type": "library",
             "description": "Scoding internal ruleset for Code Sniffer.",
             "support": {
-                "source": "https://gitlab.com/scoding-internal/scoding-cs-rules/-/tree/1.0.1"
+                "source": "https://gitlab.com/scoding-internal/scoding-cs-rules/-/tree/1.0.2"
             },
-            "time": "2022-11-28T13:27:17+02:00"
+            "time": "2022-12-15T07:10:47+00:00"
         },
         {
             "name": "sebastian/diff",
