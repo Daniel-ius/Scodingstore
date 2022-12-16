@@ -25,7 +25,7 @@
         "squizlabs/php_codesniffer": "*",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.11",
         "escapestudios/symfony2-coding-standard": "3.x-dev",
-        "scoding/cs-ruleset": "^1.0.1"
+        "scoding/cs-ruleset": "^1.0.2"
     },
     "scripts": {
         "post-install-cmd": [
