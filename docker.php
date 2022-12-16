@@ -159,9 +159,9 @@ class DockerImage
         }
         $platform = DockerPushService::SUPPORTED_PLATFORMS[$this->platformUname];
 
-        file_put_contents($replacedContent, $dockerfile);
+        file_put_contents($dockerfile, $replacedContent);
         exec("docker build --platform {$platform} -t {$this->registry}/{$this->imageName} {$this->path}/.", $output, $result);
-        file_put_contents($content, $dockerfile);
+        file_put_contents($dockerfile, $content);
 
         return $result === 0;
     }
