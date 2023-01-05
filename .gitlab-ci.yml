@@ -117,5 +117,8 @@ docker_image_validate:
   only:
     - branches
   script:
+    - echo $GITLAB_REGISTRY_SCODING
+    - echo $GITLAB_REGISTRY_USER_SCODING
+    - echo $GITLAB_REGISTRY_PASSWORD_SCODING
     - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER_SCODING -p $GITLAB_REGISTRY_PASSWORD_SCODING
     - php docker.php --only-build
