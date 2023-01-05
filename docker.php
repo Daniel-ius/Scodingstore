@@ -16,8 +16,7 @@ class DockerPushService
      * @var string[]
      */
     private const REGISTRIES = [
-        'registry.gitlab.com/sc-rep/scoding/internal7/docker-images',
-        'scodocker',
+        'registry.gitlab.scoding.com/scoding-internal/docker-images',
     ];
 
     /**
@@ -136,10 +135,9 @@ class DockerImage
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
 
-        if (!$onlyBuild) {
-            if (!$this->push()) {
-                throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
-            }
+
+        if (!$this->push()) {
+            throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
         }
 
         return $this;
