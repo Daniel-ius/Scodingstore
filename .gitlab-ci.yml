@@ -116,7 +116,7 @@ docker_image_validate:
     - name: docker:dind
       alias: docker
   variables:
-    DOCKER_HOST: tcp://172.17.2.160:2375
+    DOCKER_HOST: tcp://172.18.0.2:2375
   only:
     - branches
   script:
