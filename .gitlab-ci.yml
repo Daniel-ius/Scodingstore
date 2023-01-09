@@ -112,6 +112,8 @@ docker_image_validate:
   image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
   needs:
     - job: install_dependencies
+  services:
+    - docker:dind
   only:
     - branches
   script:
