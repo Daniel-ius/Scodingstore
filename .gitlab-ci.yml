@@ -109,11 +109,11 @@ phpstan:
 
 docker_image_validate:
   stage: validate
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
   needs:
     - job: install_dependencies
-  services:
-    - docker:dind
   only:
     - branches
   script:
+    - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php docker.php --only-build
