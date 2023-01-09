@@ -112,7 +112,10 @@ docker_image_validate:
   needs:
     - job: install_dependencies
   services:
-    - docker:dind
+    - name: docker:dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
   only:
     - branches
   script:
