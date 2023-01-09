@@ -117,5 +117,6 @@ docker_image_validate:
   only:
     - branches
   script:
+    - curl manoip.lt | grep "Išorinis IP"
     - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php docker.php --only-build
