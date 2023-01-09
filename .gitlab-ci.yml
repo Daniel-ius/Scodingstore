@@ -109,13 +109,14 @@ phpstan:
 
 docker_image_validate:
   stage: validate
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
   needs:
     - job: install_dependencies
   services:
     - name: docker:dind
       alias: docker
   variables:
-    DOCKER_HOST: tcp://docker:2375
+    DOCKER_HOST: tcp://localhost:2375
   only:
     - branches
   script:
