@@ -1,4 +1,4 @@
-image: $GITLAB_REGISTRY/sc-rep/scoding/internal7/docker-images/app_docker_amd64:latest
+image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
 
 stages:
   - dependencies
@@ -10,7 +10,7 @@ variables:
 
 install_dependencies:
   stage: dependencies
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_php_amd64:7.4
   only: [branches]
   needs: []
   cache:
@@ -35,13 +35,12 @@ docker_image_deploy:
     - master
   when: manual
   script:
-    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
+    - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER_SCODING -p $GITLAB_REGISTRY_PASSWORD_SCODING
     - php docker.php
 
 phpcs:
   stage: validate
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_php_amd64:7.4
   only: [branches]
   allow_failure: true
   needs:
@@ -66,7 +65,7 @@ phpcs:
 
 php-cs-fixer:
   stage: validate
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_php_amd64:7.4
   only: [branches]
   needs:
     - job: install_dependencies
@@ -89,7 +88,7 @@ php-cs-fixer:
 
 phpstan:
   stage: validate
-  image: registry.gitlab.com/sc-rep/scoding/internal7/docker-images/app_php_amd64:7.4
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_php_amd64:7.4
   only: [branches]
   needs:
     - job: install_dependencies
@@ -110,6 +109,7 @@ phpstan:
 
 docker_image_validate:
   stage: validate
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
   needs:
     - job: install_dependencies
   services:
@@ -117,6 +117,5 @@ docker_image_validate:
   only:
     - branches
   script:
-    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-    - docker login $GITLAB_REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
+    - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php docker.php --only-build
