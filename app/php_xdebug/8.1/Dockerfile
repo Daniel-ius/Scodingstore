@@ -1,4 +1,4 @@
-FROM registry.gitlab.scoding.com/scoding-internal/docker-images/app_php:8.1
+FROM --platform=linux/amd64 registry.gitlab.scoding.com/scoding-internal/docker-images/app_php:8.1
 
 # Set working directory
 WORKDIR /var/www/html
