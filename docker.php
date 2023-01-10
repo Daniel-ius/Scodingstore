@@ -141,7 +141,7 @@ class DockerImage
             throw new RuntimeException(sprintf('No Dockerfile found at %s path.', $this->path));
         }
 
-        $platforms = implode(',', array_filter($this->platforms, fn(string $platform) => $platform));
+        $platforms = $this->imageName === "app_mailhog" ? 'linux/amd64' : implode(',', array_filter($this->platforms, fn(string $platform) => $platform));
         exec("docker buildx inspect multiarch", $output, $result);
         if ($result === 1) {
             exec("docker buildx create --name multiarch --use", $output, $result);
