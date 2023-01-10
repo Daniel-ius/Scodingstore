@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM --platform=linux/amd64 alpine:3.4
 
 # Install ca-certificates, required for the "release message" feature:
 RUN apk --no-cache add \
