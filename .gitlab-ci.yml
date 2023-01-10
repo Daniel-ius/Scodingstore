@@ -35,7 +35,6 @@ docker_image_deploy:
     - master
   when: manual
   script:
-    - docker images -a | awk '{print $1}' | xargs docker rmi
     - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER_SCODING -p $GITLAB_REGISTRY_PASSWORD_SCODING
     - php docker.php
 
@@ -118,6 +117,5 @@ docker_image_validate:
   only:
     - branches
   script:
-    - docker images -a | awk '{print $1}' | xargs docker rmi
     - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
     - php docker.php --only-build
