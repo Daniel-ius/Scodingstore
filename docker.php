@@ -97,6 +97,9 @@ class DockerPushService
 
 class DockerImage
 {
+    /**
+     * @var string[]
+     */
     private array $platforms;
     private string $imageName;
     private string $path;
@@ -104,6 +107,9 @@ class DockerImage
 
     private Logger $logger;
 
+    /**
+     * @param string[] $platforms
+     */
     public function __construct(
         string $registry,
         string $path,
@@ -141,10 +147,10 @@ class DockerImage
             throw new RuntimeException(sprintf('No Dockerfile found at %s path.', $this->path));
         }
 
-        $platforms = implode(',', array_filter($this->platforms, fn(string $platform) => $platform));
-        exec("docker buildx inspect multiarch", $output, $result);
+        $platforms = implode(',', array_filter($this->platforms, fn (string $platform) => $platform));
+        exec('docker buildx inspect multiarch', $output, $result);
         if ($result === 1) {
-            exec("docker buildx create --name multiarch --use", $output, $result);
+            exec('docker buildx create --name multiarch --use', $output, $result);
         }
         exec("docker buildx build --platform {$platforms} -t {$this->registry}/{$this->imageName} {$this->path}/. $pushFlag", $output, $result);
         $this->logger->log(sprintf('Image %s build complete.', $this->imageName));
@@ -154,33 +160,6 @@ class DockerImage
         }
 
         return $this;
-    }
-
-    private function buildAndPush(): bool
-    {
-        $dockerfile = sprintf('%s/Dockerfile', $this->path);
-        if (!file_exists($dockerfile)) {
-            throw new RuntimeException(sprintf('No Dockerfile found at %s path.', $this->path));
-        }
-
-        $platforms = implode(',', array_filter($this->platforms, fn(string $platform) => $platform));
-        exec("docker buildx inspect multiarch", $output, $result);
-        if ($result === 1) {
-            exec("docker buildx create --name multiarch --use", $output, $result);
-        }
-        exec("docker buildx build --platform {$platforms} -t {$this->registry}/{$this->imageName} {$this->path}/. --push", $output, $result);
-        $this->logger->log(sprintf('Image %s build complete.', $this->imageName));
-
-        return $result === 0;
-    }
-
-    private function push(): bool
-    {
-        $this->logger->log(sprintf('Pushing image %s.', $this->imageName));
-        exec("docker push {$this->registry}/{$this->imageName}", $output, $result);
-        $this->logger->log(sprintf('Push of image %s complete.', $this->imageName));
-
-        return $result === 0;
     }
 }
 
