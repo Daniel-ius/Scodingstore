@@ -140,7 +140,7 @@ class DockerImage
 
     public function create(bool $onlyBuild = false): self
     {
-        $this->logger->log(sprintf('Creating %s image using $onlyBuild = %d', $this->imageName, (int) $onlyBuild));
+        $this->logger->log(sprintf('Creating %s image on %s platform using $onlyBuild = %d', $this->imageName, $this->platformUname, (int) $onlyBuild));
 
         if (!$this->build()) {
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
