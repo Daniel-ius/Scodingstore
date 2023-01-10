@@ -53,9 +53,7 @@ class DockerPushService
         array_filter($directories, function (string $path) {
             $images = [];
             foreach (self::REGISTRIES as $registry) {
-                foreach (self::SUPPORTED_PLATFORMS as $platformUname => $platform) {
-                    $images[] = $this->dockerCreateImage($registry, $path, $platformUname)->getImageName();
-                }
+                $images[] = $this->dockerCreateImage($registry, $path)->getImageName();
             }
 
             return $images;
@@ -64,12 +62,12 @@ class DockerPushService
         $this->logger->log('Job completed...');
     }
 
-    private function dockerCreateImage(string $registry, string $path, string $platformUname): DockerImage
+    private function dockerCreateImage(string $registry, string $path): DockerImage
     {
         $imageNameParts = explode('/', str_replace(__DIR__.'/', '', $path));
         $tag = array_pop($imageNameParts);
-        $imageName = sprintf('%s_%s:%s', implode('_', $imageNameParts), $platformUname, $tag);
-        $image = new DockerImage($registry, $path, $imageName, $platformUname);
+        $imageName = sprintf('%s:%s', implode('_', $imageNameParts), $tag);
+        $image = new DockerImage($registry, $path, $imageName, self::SUPPORTED_PLATFORMS);
 
         return $image->create(isset($this->options['only-build']));
     }
@@ -99,7 +97,7 @@ class DockerPushService
 
 class DockerImage
 {
-    private string $platformUname;
+    private array $platforms;
     private string $imageName;
     private string $path;
     private string $registry;
@@ -110,12 +108,12 @@ class DockerImage
         string $registry,
         string $path,
         string $imageName,
-        string $platform
+        array $platforms
     ) {
         $this->registry = $registry;
         $this->path = $path;
         $this->imageName = $imageName;
-        $this->platformUname = $platform;
+        $this->platforms = $platforms;
         $this->logger = new Logger();
     }
 
@@ -134,55 +132,43 @@ class DockerImage
         return $this->imageName;
     }
 
-    public function getPlatformUname(): string
-    {
-        return $this->platformUname;
-    }
-
     public function create(bool $onlyBuild = false): self
     {
-        $this->logger->log(sprintf('Creating %s image on %s platform using $onlyBuild = %d', $this->imageName, $this->platformUname, (int) $onlyBuild));
-
-        if (!$this->build()) {
-            throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
+        $this->logger->log(sprintf('Creating %s image using $onlyBuild = %d', $this->imageName, (int) $onlyBuild));
+        $pushFlag = $onlyBuild ? '' : '--push';
+        $dockerfile = sprintf('%s/Dockerfile', $this->path);
+        if (!file_exists($dockerfile)) {
+            throw new RuntimeException(sprintf('No Dockerfile found at %s path.', $this->path));
         }
 
-        if (!$this->push()) {
-            throw new RuntimeException(sprintf('Failed to push image %s', $this->imageName));
+        $platforms = implode(',', array_filter($this->platforms, fn(string $platform) => $platform));
+        exec("docker buildx inspect multiarch", $output, $result);
+        if ($result === 1) {
+            exec("docker buildx create --name multiarch --use", $output, $result);
+        }
+        exec("docker buildx build --platform {$platforms} -t {$this->registry}/{$this->imageName} {$this->path}/. $pushFlag", $output, $result);
+        $this->logger->log(sprintf('Image %s build complete.', $this->imageName));
+
+        if ($result !== 0) {
+            throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
 
         return $this;
     }
 
-    private function build(): bool
+    private function buildAndPush(): bool
     {
         $dockerfile = sprintf('%s/Dockerfile', $this->path);
         if (!file_exists($dockerfile)) {
             throw new RuntimeException(sprintf('No Dockerfile found at %s path.', $this->path));
         }
 
-        $content = file_get_contents($dockerfile);
-        $replacedContent = str_replace(['{{platform}}', '{{ platform }}'], [$this->platformUname, $this->platformUname], $content);
-        if (str_contains($content, '{{platform}}') || str_contains($content, '{{ platform }}')) {
-            $this->logger->log(sprintf('Changing platforms for %s image.', $this->imageName));
-            $line = fgets(fopen($dockerfile, 'r'));
-            $this->logger->log(sprintf(
-                'Replaced platform for image: %s',
-                str_replace(
-                    ['{{platform}}', '{{ platform }}'],
-                    [$this->platformUname, $this->platformUname],
-                    $line
-                )
-            ));
+        $platforms = implode(',', array_filter($this->platforms, fn(string $platform) => $platform));
+        exec("docker buildx inspect multiarch", $output, $result);
+        if ($result === 1) {
+            exec("docker buildx create --name multiarch --use", $output, $result);
         }
-        if (!isset(DockerPushService::SUPPORTED_PLATFORMS[$this->platformUname])) {
-            throw new RuntimeException(sprintf('Unsupported platform for %s uname', $this->platformUname));
-        }
-        $platform = DockerPushService::SUPPORTED_PLATFORMS[$this->platformUname];
-
-        file_put_contents($dockerfile, $replacedContent);
-        exec("docker build --platform {$platform} -t {$this->registry}/{$this->imageName} {$this->path}/.", $output, $result);
-        file_put_contents($dockerfile, $content);
+        exec("docker buildx build --platform {$platforms} -t {$this->registry}/{$this->imageName} {$this->path}/. --push", $output, $result);
         $this->logger->log(sprintf('Image %s build complete.', $this->imageName));
 
         return $result === 0;
