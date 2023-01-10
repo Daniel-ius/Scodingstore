@@ -34,16 +34,20 @@ class DockerPushService
      */
     private array $options;
 
+    private Logger $logger;
+
     /**
      * @param string[] $options
      */
     public function __construct(array $options = [])
     {
         $this->options = $options;
+        $this->logger = new Logger();
     }
 
     public function push(): void
     {
+        $this->logger->log('Starting to push images...');
         $directories = $this->scanDirectories();
         array_filter($directories, function (string $path) {
             $images = [];
@@ -55,6 +59,8 @@ class DockerPushService
 
             return $images;
         });
+
+        $this->logger->log('Job completed...');
     }
 
     private function dockerCreateImage(string $registry, string $path, string $platformUname): DockerImage
@@ -97,6 +103,8 @@ class DockerImage
     private string $path;
     private string $registry;
 
+    private Logger $logger;
+
     public function __construct(
         string $registry,
         string $path,
@@ -107,6 +115,7 @@ class DockerImage
         $this->path = $path;
         $this->imageName = $imageName;
         $this->platformUname = $platform;
+        $this->logger = new Logger();
     }
 
     public function getRegistry(): string
@@ -131,6 +140,8 @@ class DockerImage
 
     public function create(bool $onlyBuild = false): self
     {
+        $this->logger->log(sprintf('Creating %s image using $onlyBuild = %d', $this->imageName, (int) $onlyBuild));
+
         if (!$this->build()) {
             throw new RuntimeException(sprintf('Failed to build image %s', $this->imageName));
         }
@@ -151,6 +162,18 @@ class DockerImage
 
         $content = file_get_contents($dockerfile);
         $replacedContent = str_replace(['{{platform}}', '{{ platform }}'], [$this->platformUname, $this->platformUname], $content);
+        if (str_contains($content, '{{platform}}') || str_contains($content, '{{ platform }}')) {
+            $this->logger->log(sprintf('Changing platforms for %s image.', $this->imageName));
+            $line = fgets(fopen($dockerfile, 'r'));
+            $this->logger->log(sprintf(
+                'Replaced platform for image: %s',
+                str_replace(
+                    ['{{platform}}', '{{ platform }}'],
+                    [$this->platformUname, $this->platformUname],
+                    $line
+                )
+            ));
+        }
         if (!isset(DockerPushService::SUPPORTED_PLATFORMS[$this->platformUname])) {
             throw new RuntimeException(sprintf('Unsupported platform for %s uname', $this->platformUname));
         }
@@ -159,15 +182,26 @@ class DockerImage
         file_put_contents($dockerfile, $replacedContent);
         exec("docker build --platform {$platform} -t {$this->registry}/{$this->imageName} {$this->path}/.", $output, $result);
         file_put_contents($dockerfile, $content);
+        $this->logger->log(sprintf('Image %s build complete.', $this->imageName));
 
         return $result === 0;
     }
 
     private function push(): bool
     {
+        $this->logger->log(sprintf('Pushing image %s.', $this->imageName));
         exec("docker push {$this->registry}/{$this->imageName}", $output, $result);
+        $this->logger->log(sprintf('Push of image %s complete.', $this->imageName));
 
         return $result === 0;
+    }
+}
+
+class Logger
+{
+    public function log(string $message): void
+    {
+        echo $message."\n";
     }
 }
 
