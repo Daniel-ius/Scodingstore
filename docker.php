@@ -27,6 +27,7 @@ class DockerPushService
         '..',
         '.git',
         '.idea',
+        'vendor',
     ];
 
     /**
