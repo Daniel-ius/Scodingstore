@@ -1,5 +1,4 @@
-FROM --platform=$BUILDPLATFORM docker:latest
-ARG BUILDPLATFORM
+FROM --platform=linux/amd64 docker:latest
 
 WORKDIR /var/www/html
 USER root

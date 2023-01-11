@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   image_php:
-    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_php_amd64:7.4
+    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_php:7.4
     container_name: image_php
     restart: unless-stopped
     tty: true
