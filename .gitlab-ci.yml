@@ -1,4 +1,4 @@
-image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
+image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker:latest
 
 stages:
   - dependencies
@@ -29,7 +29,7 @@ install_dependencies:
 
 docker_image_deploy:
   stage: deploy
-  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker:latest
   services:
     - docker:dind
   only:
@@ -111,7 +111,7 @@ phpstan:
 
 docker_image_validate:
   stage: validate
-  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker_amd64:latest
+  image: $GITLAB_REGISTRY/scoding-internal/docker-images/app_docker:latest
   needs:
     - job: install_dependencies
   services:
