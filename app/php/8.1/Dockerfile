@@ -20,8 +20,6 @@ RUN runtimeDeps=" \
     && docker-php-ext-install iconv mbstring imap \
     && rm -r /var/lib/apt/lists/*
 
-RUN apt-get update -y && apt-get install -y sendmail
-
 RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libzip-dev \
@@ -77,6 +75,8 @@ COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN chown -R www-data:www-data ./
+
+RUN apt-get update -y && apt-get install -y sendmail libpng-dev
 
 RUN apt-get install -y \
         libwebp-dev \
