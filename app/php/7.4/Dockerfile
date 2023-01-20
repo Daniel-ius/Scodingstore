@@ -68,6 +68,7 @@ RUN install-php-extensions ssh2
 # Change current user to www
 USER root
 
+COPY hosts /etc/hosts
 COPY local.ini /usr/local/etc/php/conf.d/local.ini
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

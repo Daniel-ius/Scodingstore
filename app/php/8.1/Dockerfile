@@ -20,8 +20,6 @@ RUN runtimeDeps=" \
     && docker-php-ext-install iconv mbstring imap \
     && rm -r /var/lib/apt/lists/*
 
-RUN apt-get update -y && apt-get install -y sendmail
-
 RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libzip-dev \
@@ -71,6 +69,7 @@ RUN install-php-extensions ssh2
 # Change current user to www
 USER root
 
+COPY hosts /etc/hosts
 COPY local.ini /usr/local/etc/php/conf.d/local.ini
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
