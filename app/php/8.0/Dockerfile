@@ -73,8 +73,6 @@ USER root
 
 RUN cat /etc/hosts
 
-RUN apt-get update -y && apt-get install -y sudo
-
 RUN if ! grep -q "gitlab.scoding.com" /etc/hosts; then echo "172.17.2.161 gitlab.scoding.com" | sudo tee -a /etc/hosts; fi
 
 COPY local.ini /usr/local/etc/php/conf.d/local.ini

@@ -83,8 +83,6 @@ RUN chown -R www-data:www-data ./
 
 RUN cat /etc/hosts
 
-RUN apt-get update -y && apt-get install -y sendmail libpng-dev
-
 RUN apt-get install -y \
         libwebp-dev \
         libpng-dev
