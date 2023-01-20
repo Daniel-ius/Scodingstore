@@ -78,8 +78,6 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN chown -R www-data:www-data ./
 
-RUN cat /etc/hosts
-
 RUN apt-get install -y \
         libwebp-dev \
         libpng-dev
