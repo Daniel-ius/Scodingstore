@@ -68,10 +68,7 @@ RUN install-php-extensions ssh2
 # Change current user to www
 USER root
 
-RUN cat /etc/hosts
-
-RUN if ! grep -q "gitlab.scoding.com" /etc/hosts; then echo "172.17.2.161 gitlab.scoding.com" | sudo tee -a /etc/hosts; fi
-
+COPY hosts /etc/hosts
 COPY local.ini /usr/local/etc/php/conf.d/local.ini
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
