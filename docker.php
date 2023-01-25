@@ -28,6 +28,8 @@ class DockerPushService
         '.git',
         '.idea',
         'vendor',
+        'tests',
+        'src',
     ];
 
     /**
@@ -49,7 +51,7 @@ class DockerPushService
     public function push(): void
     {
         $this->logger->log('Starting to push images...');
-        $directories = $this->scanDirectories();
+        $directories = $this->scanDirectories(__DIR__.'/images');
         array_filter($directories, function (string $path) {
             $images = [];
             foreach (self::REGISTRIES as $registry) {
