@@ -38,7 +38,7 @@ docker_image_deploy:
   script:
     - docker system prune --force
     - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
-    - php docker.php
+    - bin/console app:docker-scan-images
 
 phpcs:
   stage: validate
@@ -121,4 +121,4 @@ docker_image_validate:
   script:
     - docker system prune --force
     - docker login $GITLAB_REGISTRY_SCODING -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_PASSWORD
-    - php docker.php --only-build
+    - bin/console app:docker-scan-images -b=true

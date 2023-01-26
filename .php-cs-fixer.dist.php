@@ -17,8 +17,12 @@ use PhpCsFixerCustomFixers\Fixer\StringableInterfaceFixer;
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
     ->exclude([
-        'vendor',
+        'node_modules',
+        'var',
+        'config',
+        'public',
     ])
+    ->notPath('src/Kernel.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 
@@ -32,6 +36,9 @@ return (new PhpCsFixer\Config())
         '@DoctrineAnnotation' => true,
         'phpdoc_to_comment' => false,
         'single_line_throw' => false,
+        'concat_space' => [
+            'spacing' => 'one'
+        ],
         'yoda_style' => false,
         'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
         'array_indentation' => true,
