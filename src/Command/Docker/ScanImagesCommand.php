@@ -37,10 +37,13 @@ class ScanImagesCommand extends Command
     {
         $path = $input->getOption(self::OPTION_PATH);
         $onlyBuild = (bool) $input->getOption(self::OPTION_BUILD);
-        $dockerScanService = new DockerScanImagesService([
-            'path' => $path,
-            'only-build' => $onlyBuild,
-        ]);
+        $dockerScanService = new DockerScanImagesService(
+            sprintf('%s/images', $this->rootPath),
+            [
+                'path' => $path,
+                'only-build' => $onlyBuild,
+            ]
+        );
         $dockerScanService->scan();
 
         return Command::SUCCESS;

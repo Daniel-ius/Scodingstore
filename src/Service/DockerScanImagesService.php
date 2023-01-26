@@ -27,6 +27,7 @@ class DockerScanImagesService
      * @param array{only-build: bool, path: string} $options
      */
     public function __construct(
+        private readonly string $rootPath,
         private readonly array $options
     ) {
     }
@@ -46,12 +47,12 @@ class DockerScanImagesService
 
     private function dockerCreateImage(string $registry, string $path): DockerImage
     {
-        $imageNameParts = explode('/', str_replace(sprintf('%s/', $this->options['path']), '', $path));
+        $imageNameParts = explode('/', str_replace(sprintf('%s/', $this->rootPath), '', $path));
         $tag = array_pop($imageNameParts);
         $imageName = sprintf('%s:%s', implode('_', $imageNameParts), $tag);
         $image = new DockerImage($registry, $path, $imageName, self::SUPPORTED_PLATFORMS);
 
-        return $image->create(isset($this->options['only-build']));
+        return $image->create($this->options['only-build']);
     }
 
     /**
