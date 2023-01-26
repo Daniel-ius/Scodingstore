@@ -1,16 +1,59 @@
 version: '3.9'
 
 services:
-  image_php:
-    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_php:7.4
-    container_name: image_php
+  images_php:
+    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_docker:latest
+    container_name: images_php
+    build:
+      context: images/app/docker/latest
     restart: unless-stopped
+    depends_on:
+      - images_mysql
+      - images_nginx
     tty: true
     working_dir: /var/www/html
+    environment:
+      PHP_IDE_CONFIG: "serverName=symfony-local"
     ports:
       - "9005:9000"
     volumes:
       - ./:/var/www/html:cached
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini:delegated
+      - ./docker/php/www.conf:/usr/local/etc/php-fpm.d/www.conf:delegated
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:delegated
+    extra_hosts:
+      - "docker.for.mac.localhost:host-gateway"
+      - "gitlab.scoding.com:172.17.2.161"
+    networks:
+      - app-network
+
+  images_mysql:
+    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_mariadb:latest
+    container_name: images_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: app
+      MARIADB_USER: user
+      MARIADB_PASSWORD: root
+    restart: on-failure
+    volumes:
+      - ./docker/mysql/data:/bitnami/mariadb
+    networks:
+      - app-network
+
+  images_nginx:
+    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_nginx:latest
+    container_name: images_nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html:cached
+      - ./docker/nginx/conf.d/app.conf:/etc/nginx/conf.d/app.conf:delegated
+      - ./docker/log/nginx:/var/log/nginx
     networks:
       - app-network
 
