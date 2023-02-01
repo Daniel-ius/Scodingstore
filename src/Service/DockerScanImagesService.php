@@ -63,6 +63,11 @@ class DockerScanImagesService
     private function scanDirectories(string $path = __DIR__, array &$result = []): array
     {
         foreach (scandir($path) as $dir) {
+            if ($dir === 'Dockerfile') {
+                $result[] = $path;
+                continue;
+            }
+
             if (!is_dir($path . '/' . $dir) || in_array($dir, ['.', '..'])) {
                 continue;
             }
