@@ -34,7 +34,6 @@ RUN apt-get update && apt-get -y install cron \
     && crontab /etc/cron.d/etaplius-crontab \
     && touch /var/log/cron.log \
     && service cron start  \
-; fi
 
 ## TODO: Needs to be splitted into different docker image as a service.
 RUN apt-get update -y \
