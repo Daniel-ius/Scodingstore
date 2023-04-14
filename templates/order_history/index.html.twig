@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello OrderHistoryController!{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+        <h1 class="my-4">Order History</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Items</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for orderHistory in histories %}
+                <tr>
+                    <td>
+                        {% for cart in orderHistory.cart %}
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                        {% for item in cart.items %}
+                                            <div class="row">
+                                                {{ item.product.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.totalPrice }}
+                                            </div>
+                                        {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

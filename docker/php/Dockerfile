@@ -72,6 +72,7 @@ COPY ./www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN chown -R www-data:www-data ./
+RUN chown -R 1000:1000 ./
 
 RUN apt-get update -y && apt-get install -y sendmail libpng-dev
 
