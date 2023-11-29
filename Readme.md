@@ -11,6 +11,11 @@ This was my internships final project.
 
 ## Installation
 ```bash
+git clone https://github.com/Daniel-ius/Scodingstore.git
+cd Scodingstore
+```
+
+```bash
 cp .env.dist .env
 ```
 
