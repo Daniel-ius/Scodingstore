@@ -2,15 +2,13 @@ version: '3.9'
 
 services:
   images_php:
-    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_docker:latest
     container_name: images_php
-    build:
-      context: images/app/docker/latest
+    build: docker/php
     restart: unless-stopped
+    tty: true
     depends_on:
       - images_mysql
       - images_nginx
-    tty: true
     working_dir: /var/www/html
     environment:
       PHP_IDE_CONFIG: "serverName=symfony-local"
@@ -23,12 +21,11 @@ services:
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:delegated
     extra_hosts:
       - "docker.for.mac.localhost:host-gateway"
-      - "gitlab.scoding.com:172.17.2.161"
     networks:
       - app-network
 
   images_mysql:
-    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_mariadb:latest
+    build: docker/mysql
     container_name: images_mysql
     ports:
       - "3306:3306"
@@ -44,19 +41,18 @@ services:
       - app-network
 
   images_nginx:
-    image: registry.gitlab.scoding.com/scoding-internal/docker-images/app_nginx:latest
+    build: docker/nginx
     container_name: images_nginx
     restart: unless-stopped
     tty: true
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./:/var/www/html:cached
       - ./docker/nginx/conf.d/app.conf:/etc/nginx/conf.d/app.conf:delegated
       - ./docker/log/nginx:/var/log/nginx
     networks:
       - app-network
-
 #Docker Networks
 networks:
   app-network:

@@ -1,4 +1,4 @@
-FROM php:8.1.5-fpm
+FROM php:8.2-fpm
 
 # Set working directory
 WORKDIR /var/www/html
@@ -56,8 +56,8 @@ RUN pecl install \
 		opcache \
 	;
 ## xDebug
-RUN pecl install xdebug
-RUN install-php-extensions xdebug
+#RUN pecl install xdebug
+#RUN install-php-extensions xdebug
 # BCMath
 RUN docker-php-ext-install bcmath
 # Symfony requirement

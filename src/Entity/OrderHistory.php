@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\CartRepository;
@@ -23,6 +22,7 @@ class OrderHistory
 
     #[ORM\OneToMany(mappedBy: 'orderHistory', targetEntity: Cart::class)]
     private Collection $cart;
+
     public function __construct()
     {
         $this->cart = new ArrayCollection();
