@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Products;
+use App\Entity\Product;
 use App\Form\AddToCartType;
 use App\Manager\CartManager;
 use App\Repository\ProductsRepository;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 
 
-class ProductController extends AbstractController
+class ProductsController extends AbstractController
 {
 
     private RateLimiterFactory $factory;
@@ -69,32 +69,34 @@ class ProductController extends AbstractController
                 'products' => $products,
                 'search' => $searchTerm,
                 'category' => $category,
-                'categories' => Products::$categorys,
+                'categories' => Product::$categories,
             ]);
     }//end list()
 
     #[Route('/product/{id}', name: 'detail_product', methods: ['GET', 'POST'])]
-    public function detail(Products $product, Request $request, CartManager $cartManager): Response
+    public function detail(Request $request, CartManager $cartManager,ProductsRepository $repository): Response
     {
         $form = $this->createForm(AddToCartType::class);
         $form->handleRequest($request);
 
+        $products = $repository->find($request->get('id'));
+
         if ($form->isSubmitted() && $form->isValid()) {
             $item = $form->getData();
-            $item->setProduct($product);
+            $item->setProduct($products);
 
             $cart = $cartManager->getCurrentCart();
             $cart->addItem($item)->setUpdatedAt(new \DateTime());
 
             $cartManager->save($cart);
 
-            return $this->redirectToRoute('app_cart', ['id' => $product->getId()]);
+            return $this->redirectToRoute('app_cart', ['id' => $products->getId()]);
         }
 
         return $this->render(
             'product/detail.html.twig',
             [
-                'product' => $product,
+                'product' => $products,
                 'form' => $form->createView(),
             ]
         );

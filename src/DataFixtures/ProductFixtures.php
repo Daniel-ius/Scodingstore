@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Products;
+use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -35,10 +35,10 @@ class ProductFixtures extends Fixture
         $user->setRoles(['ROLE_ADMIN']);
         $manager->persist($user);
         for ($i = 0; $i < 1000; $i++) {
-            $product = new Products();
+            $product = new Product();
             $product->setName("Product $i");
             $product->setPrice(round((mt_rand(5, 600) * 0.25 / 0.33), 2));
-            $product->setCategory(Products::$categorys[mt_rand(0, (count(Products::$categorys) - 1))]);
+            $product->setCategory(Product::$categories[mt_rand(0, (count(Product::$categories) - 1))]);
             $product->setDescription("Product description $i");
             $manager->persist($product);
         }

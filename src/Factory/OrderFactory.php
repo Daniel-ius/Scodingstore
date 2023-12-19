@@ -4,7 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Cart;
 use App\Entity\CartItem;
-use App\Entity\Products;
+use App\Entity\Product;
 
 
 class OrderFactory
@@ -24,11 +24,11 @@ class OrderFactory
 
 
     /**
-     * @param Products $product
+     * @param Product $product
      *
      * @return CartItem
      */
-    public function createItem(Products $product): CartItem
+    public function createItem(Product $product): CartItem
     {
         $item = new CartItem();
         $item->setTotalPrice($product->getPrice());

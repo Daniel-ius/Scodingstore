@@ -18,6 +18,7 @@ cd Scodingstore
 ```bash
 cp .env.dist .env
 ```
+Configure .env file according to your environment.
 
 1. For docker run
 ```bash

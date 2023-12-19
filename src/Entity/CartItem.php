@@ -19,8 +19,8 @@ class CartItem
     #[ORM\Column(type: 'float', precision: 2, scale: 2)]
     private float $totalPrice = 0.0;
 
-    #[ORM\ManyToOne(targetEntity: Products::class)]
-    private ?Products $product;
+    #[ORM\ManyToOne(targetEntity: Product::class)]
+    private ?Product $product;
 
     #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     private ?Cart $orderRef;
@@ -31,12 +31,12 @@ class CartItem
         return $this->id;
     }
 
-    public function getProduct(): ?Products
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
 
-    public function setProduct(Products $product): self
+    public function setProduct(Product $product): self
     {
         $this->product = $product;
 

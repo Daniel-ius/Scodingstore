@@ -1,4 +1,7 @@
 {
   "build/app.js": "/build/app.js",
-  "build/global.css": "/build/global.css"
+  "build/global.css": "/build/global.css",
+  "build/images/groceries.jpg": "/build/images/groceries.jpg",
+  "build/images/clothing.jpg": "/build/images/clothing.jpg",
+  "build/images/electronics.jpg": "/build/images/electronics.jpg"
 }

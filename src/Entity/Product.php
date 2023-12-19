@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ProductsRepository;
@@ -8,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductsRepository::class)]
 #[ORM\Table(name: 'products')]
-class Products
+class Product
 {
 
     #[ORM\Id]
@@ -31,7 +30,7 @@ class Products
     #[ORM\OneToMany(mappedBy: 'orderRef', targetEntity: CartItem::class)]
     private $orders;
 
-    public static array $categorys = [
+    public static array $categories = [
         'electronics',
         'clothing',
         'groceries',
